@@ -1,0 +1,28 @@
+{
+  "name": "entertainment-wishlist-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "express.js",
+    "node.js",
+    "moongodb",
+    "rest-api"
+  ],
+  "author": "Pushpender Singh (pushpend3r@gmail.com)",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.0",
+    "node-fetch": "^3.3.0"
+  }
+}
