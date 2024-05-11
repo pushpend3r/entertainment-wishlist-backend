@@ -1,0 +1,33 @@
+{
+  "name": "entertainment-wishlist-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "start:dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@apollo/datasource-rest": "^6.2.2",
+    "@apollo/server": "^4.10.4",
+    "@graphql-tools/load-files": "^7.0.0",
+    "axios": "^1.6.8",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "graphql": "^16.8.1",
+    "graphql-tools": "^9.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.2",
+    "tsx": "^4.7.3"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}
