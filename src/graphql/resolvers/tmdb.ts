@@ -192,7 +192,7 @@ export default {
         user: user.id,
       });
 
-      const result = watchedList.media.movie_ids.map((id) =>
+      const result = watchedList?.media?.movie_ids?.map((id) =>
         context.dataSources.tmdb.getMovie(id)
       );
 
@@ -212,7 +212,7 @@ export default {
         user: user.id,
       });
 
-      const result = wishlist.media.movie_ids.map((id) =>
+      const result = wishlist?.media?.movie_ids?.map((id) =>
         context.dataSources.tmdb.getMovie(id)
       );
 
@@ -239,7 +239,7 @@ export default {
         user: user.id,
       });
 
-      const result = watchedList.media.tvshow_ids.map((id) =>
+      const result = watchedList?.media?.tvshow_ids?.map((id) =>
         context.dataSources.tmdb.getTVShow(id)
       );
 
@@ -260,7 +260,7 @@ export default {
         user: user.id,
       });
 
-      const result = wishlist.media.tvshow_ids.map((id) =>
+      const result = wishlist?.media?.tvshow_ids?.map((id) =>
         context.dataSources.tmdb.getTVShow(id)
       );
 
