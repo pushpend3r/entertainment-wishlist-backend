@@ -2,6 +2,7 @@ import { GraphQLError } from "graphql";
 import { ApolloContext } from "../../types/apollo";
 import { Wishlist } from "../../db/models/wishlist";
 import { WatchedList } from "../../db/models/watchedlist";
+import { UserNotAuthenticated } from "../../utils/apollo";
 
 export default {
   Mutation: {
@@ -10,12 +11,7 @@ export default {
       const { movieId } = args || {};
 
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       if (!movieId) {
@@ -64,12 +60,7 @@ export default {
       const { movieId } = args || {};
 
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       if (!movieId) {
@@ -105,12 +96,7 @@ export default {
       const { movieId } = args || {};
 
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       if (!movieId) {
@@ -159,12 +145,7 @@ export default {
       const { movieId } = args || {};
 
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       if (!movieId) {
@@ -195,12 +176,7 @@ export default {
       const { tvshowId } = args || {};
 
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       if (!tvshowId) {
@@ -249,12 +225,7 @@ export default {
       const { tvshowId } = args || {};
 
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       if (!tvshowId) {
@@ -290,12 +261,7 @@ export default {
       const { tvshowId } = args || {};
 
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       if (!tvshowId) {
@@ -344,12 +310,7 @@ export default {
       const { tvshowId } = args || {};
 
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       if (!tvshowId) {

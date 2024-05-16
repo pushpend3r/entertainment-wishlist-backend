@@ -2,6 +2,7 @@ import { GraphQLError } from "graphql";
 import { ApolloContext } from "../../types/apollo";
 import { Wishlist } from "../../db/models/wishlist";
 import { WatchedList } from "../../db/models/watchedlist";
+import { UserNotAuthenticated } from "../../utils/apollo";
 
 export default {
   Person: {
@@ -181,12 +182,7 @@ export default {
     async getWatchedMovies(_, args, context: ApolloContext) {
       const { user } = context || {};
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
       const watchedList = await WatchedList.findOne({
         user: user.id,
@@ -201,12 +197,7 @@ export default {
     async getWishlistedMovies(_, args, context: ApolloContext) {
       const { user } = context || {};
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
       const wishlist = await Wishlist.findOne({
         user: user.id,
@@ -227,12 +218,7 @@ export default {
     async getWatchedTVShows(_, args, context: ApolloContext) {
       const { user } = context || {};
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       const watchedList = await WatchedList.findOne({
@@ -248,12 +234,7 @@ export default {
     async getWishlistedTVShows(_, args, context: ApolloContext) {
       const { user } = context || {};
       if (!user) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       const wishlist = await Wishlist.findOne({

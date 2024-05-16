@@ -10,6 +10,7 @@ import { User } from "./db/models/user";
 import TMDB from "./data-sources/tmdb";
 import { ApolloContext } from "./types/apollo";
 import { resolvers, typeDefs } from "./graphql";
+import { UserNotAuthenticated } from "./utils/apollo";
 
 const PORT = +process.env.PORT || 4000;
 
@@ -36,12 +37,7 @@ const { url } = await startStandaloneServer(server, {
           throw new Error();
         }
       } catch (error) {
-        throw new GraphQLError("User is not authenticated", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
       user = await User.findById(payload.id);
     }

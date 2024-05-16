@@ -35,5 +35,6 @@ export default /* GraphQL */ `
     createUser(input: CreateUserInput): Tokens
     login(input: LoginInput): Tokens
     updatePassword(newPassword: String): User
+    getNewTokens(refreshToken: String): Tokens
   }
 `;

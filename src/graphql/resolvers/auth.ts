@@ -4,8 +4,11 @@ import {
   TokenType,
   generateAccessToken,
   generateRefreshToken,
+  getTokenPayload,
+  verifyToken,
 } from "../../utils/auth";
 import { ApolloContext } from "../../types/apollo";
+import { BadRequest, UserNotAuthenticated } from "../../utils/apollo";
 
 export default {
   Mutation: {
@@ -55,12 +58,7 @@ export default {
       const isPasswordMatched = await user.comparePassword(password);
 
       if (!isPasswordMatched) {
-        throw new GraphQLError("User is not authenticated.", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       const payload = { id: user._id, name: user.name, email: user.email };
@@ -86,12 +84,7 @@ export default {
       const { user } = context;
 
       if (!user) {
-        throw new GraphQLError("User is not authenticated", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-            http: { status: 401 },
-          },
-        });
+        throw new UserNotAuthenticated();
       }
 
       user.password = newPassword;
@@ -99,6 +92,36 @@ export default {
       await user.save();
 
       return user;
+    },
+    getNewTokens: async (parent, args, context: ApolloContext, info) => {
+      const { refreshToken } = args;
+
+      try {
+        verifyToken(refreshToken);
+      } catch (error) {
+        throw new BadRequest("you have been logged out, please login again :(");
+      }
+
+      let payload = getTokenPayload(refreshToken) as any;
+
+      const user = await User.findById(payload.id);
+
+      if (!user) {
+        throw new GraphQLError("user not found");
+      }
+
+      payload = { id: payload.id, name: payload.name, email: payload.email };
+
+      return {
+        refreshToken: generateRefreshToken({
+          ...payload,
+          tokenType: TokenType.REFRESH,
+        }),
+        accessToken: generateAccessToken({
+          ...payload,
+          tokenType: TokenType.ACCESS,
+        }),
+      };
     },
   },
 };
