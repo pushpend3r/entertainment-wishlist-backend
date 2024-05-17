@@ -34,7 +34,7 @@ export default /* GraphQL */ `
   type Mutation {
     createUser(input: CreateUserInput): Tokens
     login(input: LoginInput): Tokens
-    updatePassword(newPassword: String): User
+    updatePassword(oldPassword: String, newPassword: String): Tokens
     getNewTokens(refreshToken: String): Tokens
   }
 `;

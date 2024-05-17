@@ -75,10 +75,14 @@ export default {
       };
     },
     updatePassword: async (parent, args, context: ApolloContext, info) => {
-      const { newPassword } = args || {};
+      const { oldPassword, newPassword } = args || {};
+
+      if (!oldPassword) {
+        throw new BadRequest("please provide old password");
+      }
 
       if (!newPassword) {
-        throw new GraphQLError(`Please provide the new password.`);
+        throw new BadRequest(`please provide new password`);
       }
 
       const { user } = context;
@@ -87,11 +91,28 @@ export default {
         throw new UserNotAuthenticated();
       }
 
+      const isOldPasswordCorrect = await user.comparePassword(oldPassword);
+
+      if (!isOldPasswordCorrect) {
+        throw new BadRequest("old password is not correct");
+      }
+
       user.password = newPassword;
 
       await user.save();
 
-      return user;
+      const payload = { id: user._id, name: user.name, email: user.email };
+
+      return {
+        refreshToken: generateRefreshToken({
+          ...payload,
+          tokenType: TokenType.REFRESH,
+        }),
+        accessToken: generateAccessToken({
+          ...payload,
+          tokenType: TokenType.ACCESS,
+        }),
+      };
     },
     getNewTokens: async (parent, args, context: ApolloContext, info) => {
       const { refreshToken } = args;
