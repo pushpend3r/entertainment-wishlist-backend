@@ -1,8 +1,7 @@
-import { GraphQLError } from "graphql";
 import { ApolloContext } from "../../types/apollo";
 import { Wishlist } from "../../db/models/wishlist";
 import { WatchedList } from "../../db/models/watchedlist";
-import { UserNotAuthenticated } from "../../utils/apollo";
+import { BadRequest, UserNotAuthenticated } from "../../utils/apollo";
 
 export default {
   Mutation: {
@@ -15,12 +14,7 @@ export default {
       }
 
       if (!movieId) {
-        throw new GraphQLError("Please provide movie id", {
-          extensions: {
-            code: "BAD_REQUEST",
-            http: { status: 400 },
-          },
-        });
+        throw new BadRequest("Please provide movie id");
       }
 
       await Wishlist.findOneAndUpdate(
@@ -64,12 +58,7 @@ export default {
       }
 
       if (!movieId) {
-        throw new GraphQLError("Please provide movie id", {
-          extensions: {
-            code: "BAD_REQUEST",
-            http: { status: 400 },
-          },
-        });
+        throw new BadRequest("Please provide movie id");
       }
 
       await Wishlist.findOneAndUpdate(
@@ -100,12 +89,7 @@ export default {
       }
 
       if (!movieId) {
-        throw new GraphQLError("Please provide movie id", {
-          extensions: {
-            code: "BAD_REQUEST",
-            http: { status: 400 },
-          },
-        });
+        throw new BadRequest("Please provide movie id");
       }
 
       await WatchedList.findOneAndUpdate(
@@ -149,12 +133,7 @@ export default {
       }
 
       if (!movieId) {
-        throw new GraphQLError("Please provide movie id", {
-          extensions: {
-            code: "BAD_REQUEST",
-            http: { status: 400 },
-          },
-        });
+        throw new BadRequest("Please provide movie id");
       }
 
       await WatchedList.findOneAndUpdate(
@@ -180,12 +159,7 @@ export default {
       }
 
       if (!tvshowId) {
-        throw new GraphQLError("Please provide tvshow id", {
-          extensions: {
-            code: "BAD_REQUEST",
-            http: { status: 400 },
-          },
-        });
+        throw new BadRequest("Please provide tvshow id");
       }
 
       await Wishlist.findOneAndUpdate(
@@ -229,12 +203,7 @@ export default {
       }
 
       if (!tvshowId) {
-        throw new GraphQLError("Please provide tvshow id", {
-          extensions: {
-            code: "BAD_REQUEST",
-            http: { status: 400 },
-          },
-        });
+        throw new BadRequest("Please provide tvshow id");
       }
 
       await Wishlist.findOneAndUpdate(
@@ -265,12 +234,7 @@ export default {
       }
 
       if (!tvshowId) {
-        throw new GraphQLError("Please provide tvshow id", {
-          extensions: {
-            code: "BAD_REQUEST",
-            http: { status: 400 },
-          },
-        });
+        throw new BadRequest("Please provide tvshow id");
       }
 
       await WatchedList.findOneAndUpdate(
@@ -314,12 +278,7 @@ export default {
       }
 
       if (!tvshowId) {
-        throw new GraphQLError("Please provide tvshow id", {
-          extensions: {
-            code: "BAD_REQUEST",
-            http: { status: 400 },
-          },
-        });
+        throw new BadRequest("Please provide tvshow id");
       }
 
       await WatchedList.findOneAndUpdate(

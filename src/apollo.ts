@@ -3,7 +3,6 @@ import {
   StandaloneServerContextFunctionArgument as ContextArgs,
   startStandaloneServer,
 } from "@apollo/server/standalone";
-import { GraphQLError } from "graphql";
 
 import { TokenType, getTokenPayload, verifyToken } from "./utils/auth";
 import { User } from "./db/models/user";
@@ -11,6 +10,8 @@ import TMDB from "./data-sources/tmdb";
 import { ApolloContext } from "./types/apollo";
 import { resolvers, typeDefs } from "./graphql";
 import { UserNotAuthenticated } from "./utils/apollo";
+import redisClient from "./redis";
+import { RedisKeys } from "./redis/keys";
 
 const PORT = +process.env.PORT || 4000;
 
@@ -36,20 +37,29 @@ const { url } = await startStandaloneServer(server, {
         if (payload.tokenType === TokenType.REFRESH) {
           throw new Error();
         }
+        const isTokenBlackListed = await redisClient.SISMEMBER(
+          RedisKeys.BLACKLISTED_TOKENS,
+          payload.id
+        );
+
+        if (isTokenBlackListed) {
+          throw new Error();
+        }
       } catch (error) {
         throw new UserNotAuthenticated();
       }
-      user = await User.findById(payload.id);
+      user = await User.findById(payload.userId || payload.id);
     }
 
     const { cache } = server;
     return {
       dataSources: {
         tmdb: new TMDB({ cache }),
+        redisClient: redisClient,
       },
       user,
     };
   },
 });
 
-console.log(`🚀 Server ready at: ${url}`);
+console.log(`\n🚀 Server ready at: ${url}\n`);

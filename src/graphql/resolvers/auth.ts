@@ -9,6 +9,7 @@ import {
 } from "../../utils/auth";
 import { ApolloContext } from "../../types/apollo";
 import { BadRequest, UserNotAuthenticated } from "../../utils/apollo";
+import { RedisKeys } from "../../redis/keys";
 
 export default {
   Mutation: {
@@ -61,7 +62,7 @@ export default {
         throw new UserNotAuthenticated();
       }
 
-      const payload = { id: user._id, name: user.name, email: user.email };
+      const payload = { userId: user._id, name: user.name, email: user.email };
 
       return {
         refreshToken: generateRefreshToken({
@@ -75,7 +76,8 @@ export default {
       };
     },
     updatePassword: async (parent, args, context: ApolloContext, info) => {
-      const { oldPassword, newPassword } = args || {};
+      const { oldPassword, newPassword, accessToken, refreshToken } =
+        args || {};
 
       if (!oldPassword) {
         throw new BadRequest("please provide old password");
@@ -83,6 +85,14 @@ export default {
 
       if (!newPassword) {
         throw new BadRequest(`please provide new password`);
+      }
+
+      if (!accessToken) {
+        throw new BadRequest(`please provide access token`);
+      }
+
+      if (!refreshToken) {
+        throw new BadRequest(`please provide refresh token`);
       }
 
       const { user } = context;
@@ -99,9 +109,19 @@ export default {
 
       user.password = newPassword;
 
+      const accessTokenId: string = (getTokenPayload(accessToken) as any).id;
+      const refreshTokenId: string = (getTokenPayload(refreshToken) as any).id;
+
+      const { redisClient } = context.dataSources;
+
+      await redisClient.SADD(RedisKeys.BLACKLISTED_TOKENS, [
+        accessTokenId,
+        refreshTokenId,
+      ]);
+
       await user.save();
 
-      const payload = { id: user._id, name: user.name, email: user.email };
+      const payload = { userId: user._id, name: user.name, email: user.email };
 
       return {
         refreshToken: generateRefreshToken({
@@ -116,22 +136,33 @@ export default {
     },
     getNewTokens: async (parent, args, context: ApolloContext, info) => {
       const { refreshToken } = args;
+      const { redisClient } = context.dataSources;
 
       try {
         verifyToken(refreshToken);
+        const refreshTokenId = (getTokenPayload(refreshToken) as any).id;
+
+        const isTokenBlackListed = await redisClient.SISMEMBER(
+          RedisKeys.BLACKLISTED_TOKENS,
+          refreshTokenId
+        );
+
+        if (isTokenBlackListed) {
+          throw new Error();
+        }
       } catch (error) {
         throw new BadRequest("you have been logged out, please login again :(");
       }
 
       let payload = getTokenPayload(refreshToken) as any;
 
-      const user = await User.findById(payload.id);
+      const user = await User.findById(payload.userId || payload.id);
 
       if (!user) {
         throw new GraphQLError("user not found");
       }
 
-      payload = { id: payload.id, name: payload.name, email: payload.email };
+      payload = { userId: user._id, name: user.name, email: user.email };
 
       return {
         refreshToken: generateRefreshToken({

@@ -15,10 +15,12 @@ export const generateJwt = (
 };
 
 export const generateAccessToken = (payload: any) => {
+  payload.id = `${TokenType.ACCESS}_${new Date().getTime()}_${payload.userId}`;
   return generateJwt(payload, "10h");
 };
 
 export const generateRefreshToken = (payload: any) => {
+  payload.id = `${TokenType.REFRESH}_${new Date().getTime()}_${payload.userId}`;
   return generateJwt(payload, "2d");
 };
 
