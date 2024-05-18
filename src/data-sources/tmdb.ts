@@ -88,7 +88,7 @@ class TMDB extends RESTDataSource {
 
   getTVShowVideos = async (id: number, season: number) => {
     const response = await this.get(
-      `${this.baseURL}/tv/${id}/season/${season}/videos?api_key=${this.apiKey}`
+      `${this.baseURL}/tv/${id}/videos?api_key=${this.apiKey}`
     );
     return response;
   };
